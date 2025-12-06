@@ -3,7 +3,7 @@
 namespace lve {
 	ULveWindow::ULveWindow(int w, int h, std::string name) : width{ w }, height{ h }, windowName{ name }
 	{
-		InitWindow();
+		initWindow();
 	}
 
 	ULveWindow::~ULveWindow()
@@ -12,15 +12,13 @@ namespace lve {
 		glfwTerminate();
 	}
 
-	void ULveWindow::InitWindow()
+	void ULveWindow::initWindow()
 	{
 		glfwInit();
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 		window = glfwCreateWindow(width, height, windowName.c_str(), nullptr, nullptr);
-
-
 	}
 
 }

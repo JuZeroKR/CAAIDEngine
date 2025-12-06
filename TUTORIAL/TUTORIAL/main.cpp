@@ -7,28 +7,15 @@
 
 // VulkanCore
 #include "VulkanCore.h"
+#include "ULveWindow.h"
 
 int main()
 {
-    std::cout << "Hello from CAAIDEngine!" << std::endl;
+    lve::ULveWindow window(800, 600, "Vulkan Window");
 
-    // Initialize GLFW
-    if (!glfwInit()) {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
-        return EXIT_FAILURE;
-    }
-    std::cout << "GLFW initialized successfully!" << std::endl;
-
-    // Check Vulkan support
-    if (glfwVulkanSupported()) {
-        std::cout << "Vulkan is supported!" << std::endl;
-    } else {
-        std::cerr << "Vulkan is NOT supported!" << std::endl;
-        return EXIT_FAILURE;
+    while (!window.shouldClose()) {
+        glfwPollEvents();
     }
 
-    
-
-    glfwTerminate();
     return EXIT_SUCCESS;
 }

@@ -15,10 +15,10 @@ namespace lve {
 		ULveWindow(const ULveWindow&) = delete;
 		ULveWindow& operator=(const ULveWindow&) = delete;
 
-	private:
-		void InitWindow();
-
 		bool shouldClose() { return glfwWindowShouldClose(window); }
+
+	private:
+		void initWindow();
 
 		const int width;
 		const int height;
