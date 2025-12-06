@@ -1,0 +1,34 @@
+# Visual Studio
+.vs/
+out/
+*.user
+*.suo
+*.ipch
+*.aps
+*.opensdf
+*.sdf
+*.cache
+*.pdb
+*.ilk
+*.obj
+*.tlog
+*.log
+*.idb
+
+# Build Output Directories
+x64/
+Debug/
+Release/
+
+# macOS
+.DS_Store
+
+# Makefile output
+TutorialApp
+*.o
+
+# Executables (be careful if you have pre-built tools)
+*.exe
+
+# Large dependencies
+**/VulkanSDK/
