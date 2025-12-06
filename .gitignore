@@ -30,5 +30,20 @@ TutorialApp
 # Executables (be careful if you have pre-built tools)
 *.exe
 
-# Large dependencies
-**/VulkanSDK/
+# Large dependencies - Vulkan SDK
+# Large dependencies - Vulkan SDK
+# Exclude specific heavy folders
+**/VulkanSDK/**/Doc/
+**/VulkanSDK/**/Demos/
+**/VulkanSDK/**/Templates/
+**/VulkanSDK/**/Tools/
+**/VulkanSDK/**/Source/
+**/VulkanSDK/**/Samples/
+**/VulkanSDK/**/RuntimeInstaller/
+
+# Exclude Debug libraries and binaries
+**/VulkanSDK/**/Lib/*d.lib
+**/VulkanSDK/**/Bin/*d.dll
+**/VulkanSDK/**/Bin/*d.exe
+**/VulkanSDK/**/Bin/*.json
+**/VulkanSDK/**/Bin/*.pdb
