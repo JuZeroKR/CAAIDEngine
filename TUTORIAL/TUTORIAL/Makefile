@@ -12,7 +12,7 @@ INCLUDE_DIRS = -I. -I../../Vulkan -I/opt/homebrew/include -I/usr/local/include
 LIB_DIRS = -L/opt/homebrew/lib -L/usr/local/lib
 
 # Source files
-SOURCES = main.cpp ULveWindow.cpp ../../Vulkan/VulkanCore.cpp
+SOURCES = main.cpp ULveWindow.cpp Ulve_pipeline.cpp ULve_device.cpp ../../Vulkan/VulkanCore.cpp
 
 # Output executable
 TARGET = TutorialApp
@@ -20,7 +20,25 @@ TARGET = TutorialApp
 # Compiler
 CXX = clang++
 
-all: $(TARGET)
+# Shader compiler
+GLSLC = glslc
+
+# Shader sources and targets
+SHADER_DIR = ../shaders
+VERT_SOURCES = $(wildcard $(SHADER_DIR)/*.vert)
+FRAG_SOURCES = $(wildcard $(SHADER_DIR)/*.frag)
+VERT_SPV = $(VERT_SOURCES:.vert=.vert.spv)
+FRAG_SPV = $(FRAG_SOURCES:.frag=.frag.spv)
+
+all: shaders $(TARGET)
+
+shaders: $(VERT_SPV) $(FRAG_SPV)
+
+%.vert.spv: %.vert
+	$(GLSLC) $< -o $@
+
+%.frag.spv: %.frag
+	$(GLSLC) $< -o $@
 
 $(TARGET): $(SOURCES)
 	$(CXX) $(CFLAGS) $(INCLUDE_DIRS) $(LIB_DIRS) $(SOURCES) $(LDFLAGS) -o $(TARGET)

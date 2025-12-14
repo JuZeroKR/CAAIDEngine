@@ -1,20 +1,18 @@
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
+#include "first_app.hpp"
 
 #include <iostream>
 #include <stdexcept>
 #include <cstdlib>
 
-// VulkanCore
-#include "VulkanCore.h"
-#include "ULveWindow.h"
-
 int main()
 {
-    lve::ULveWindow window(800, 600, "Vulkan Window");
+    lve::FirstApp app{};
 
-    while (!window.shouldClose()) {
-        glfwPollEvents();
+    try {
+        app.run();
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << '\n';
+        return EXIT_FAILURE;
     }
 
     return EXIT_SUCCESS;
