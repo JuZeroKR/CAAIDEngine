@@ -117,9 +117,7 @@
       <AdditionalLibraryDirectories>$(MSBuildProjectDirectory)\VulkanSDK\1.4.309.0\Lib;$(MSBuildProjectDirectory)\glfw\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PreBuildEvent>
-      <Command>call "$(ProjectDir)compile_shaders.bat"</Command>
-    </PreBuildEvent>
+
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

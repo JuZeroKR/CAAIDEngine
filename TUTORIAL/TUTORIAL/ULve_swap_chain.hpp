@@ -6,6 +6,7 @@
 #include <vulkan/vulkan.h>
 
 // std lib headers
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -16,10 +17,11 @@ class ULveSwapChain {
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
   ULveSwapChain(ULveDevice &deviceRef, VkExtent2D windowExtent);
+  ULveSwapChain(ULveDevice &deviceRef, VkExtent2D windowExtent, std::unique_ptr<ULveSwapChain> previous);
   ~ULveSwapChain();
 
   ULveSwapChain(const ULveSwapChain &) = delete;
-  void operator=(const ULveSwapChain &) = delete;
+  ULveSwapChain& operator=(const ULveSwapChain &) = delete;
 
   VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
   VkRenderPass getRenderPass() { return renderPass; }
@@ -39,6 +41,7 @@ class ULveSwapChain {
   VkResult submitCommandBuffers(const VkCommandBuffer *buffers, uint32_t *imageIndex);
 
  private:
+ void init();
   void createSwapChain();
   void createImageViews();
   void createDepthResources();
@@ -69,6 +72,7 @@ class ULveSwapChain {
   VkExtent2D windowExtent;
 
   VkSwapchainKHR swapChain;
+  std::shared_ptr<ULveSwapChain> oldSwapChain;
 
   std::vector<VkSemaphore> imageAvailableSemaphores;
   std::vector<VkSemaphore> renderFinishedSemaphores;

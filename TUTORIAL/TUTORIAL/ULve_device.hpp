@@ -35,7 +35,7 @@ class ULveDevice {
 
   // Not copyable or movable
   ULveDevice(const ULveDevice &) = delete;
-  void operator=(const ULveDevice &) = delete;
+  ULveDevice& operator=(const ULveDevice &) = delete;
   ULveDevice(ULveDevice &&) = delete;
   ULveDevice &operator=(ULveDevice &&) = delete;
 
