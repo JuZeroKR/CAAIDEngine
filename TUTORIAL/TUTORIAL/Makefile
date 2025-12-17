@@ -1,27 +1,20 @@
 CFLAGS = -std=c++20 -O2
-LDFLAGS = -lglfw -lvulkan -ldl -lpthread -framework Cocoa -framework IOKit -framework CoreVideo
-
-# Detect OS and adjust paths/flags if necessary (optional, but good for portability)
-# For now, focusing on macOS as requested.
+LDFLAGS = -L./glfw/lib-mingw-w64 -L./VulkanSDK/1.4.309.0/Lib -lglfw3 -lvulkan-1 -lgdi32 -luser32 -lkernel32
 
 # Include paths
-# Assuming Vulkan SDK and GLFW are installed via Homebrew or in standard locations
-INCLUDE_DIRS = -I. -I../../Vulkan -I/opt/homebrew/include -I/usr/local/include
-
-# Library paths
-LIB_DIRS = -L/opt/homebrew/lib -L/usr/local/lib
+INCLUDE_DIRS = -I. -I../../Vulkan -I./glfw/include -I./VulkanSDK/1.4.309.0/Include
 
 # Source files
-SOURCES = main.cpp ULveWindow.cpp Ulve_pipeline.cpp ULve_device.cpp ../../Vulkan/VulkanCore.cpp
+SOURCES = main.cpp ULveWindow.cpp Ulve_pipeline.cpp ULve_device.cpp ULve_swap_chain.cpp ULve_model.cpp first_app.cpp ../../Vulkan/VulkanCore.cpp
 
 # Output executable
-TARGET = TutorialApp
+TARGET = TutorialApp.exe
 
 # Compiler
-CXX = clang++
+CXX = g++
 
 # Shader compiler
-GLSLC = glslc
+GLSLC = ./VulkanSDK/1.4.309.0/Bin/glslc.exe
 
 # Shader sources and targets
 SHADER_DIR = ../shaders
@@ -41,7 +34,7 @@ shaders: $(VERT_SPV) $(FRAG_SPV)
 	$(GLSLC) $< -o $@
 
 $(TARGET): $(SOURCES)
-	$(CXX) $(CFLAGS) $(INCLUDE_DIRS) $(LIB_DIRS) $(SOURCES) $(LDFLAGS) -o $(TARGET)
+	$(CXX) $(CFLAGS) $(INCLUDE_DIRS) $(SOURCES) $(LDFLAGS) -o $(TARGET)
 
 .PHONY: test clean
 
@@ -49,4 +42,6 @@ test: $(TARGET)
 	./$(TARGET)
 
 clean:
-	rm -f $(TARGET)
+	del $(TARGET)
+	del $(subst /,\,$(VERT_SPV))
+	del $(subst /,\,$(FRAG_SPV))
