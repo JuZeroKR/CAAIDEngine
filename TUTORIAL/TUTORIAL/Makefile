@@ -1,20 +1,38 @@
 CFLAGS = -std=c++20 -O2
-LDFLAGS = -L./glfw/lib-mingw-w64 -L./VulkanSDK/1.4.309.0/Lib -lglfw3 -lvulkan-1 -lgdi32 -luser32 -lkernel32
 
-# Include paths
-INCLUDE_DIRS = -I. -I../../Vulkan -I./glfw/include -I./VulkanSDK/1.4.309.0/Include
+# Detect OS
+UNAME_S := $(shell uname -s)
+
+# Base target name
+TARGET_NAME = TutorialApp
+
+ifeq ($(UNAME_S), Darwin)
+	# macOS specific settings
+	# Assuming Homebrew installation
+	VULKAN_SDK_PATH = $(shell brew --prefix vulkan-headers)
+	GLFW_PATH = $(shell brew --prefix glfw)
+	
+	INCLUDE_DIRS = -I. -I../../Vulkan -I$(GLFW_PATH)/include -I$(VULKAN_SDK_PATH)/include
+	LDFLAGS = -L$(GLFW_PATH)/lib -L$(shell brew --prefix vulkan-loader)/lib -lglfw -lvulkan -framework Cocoa -framework IOKit -framework CoreVideo
+	
+	GLSLC = glslc
+	CLEAN_CMD = rm -f
+	TARGET = $(TARGET_NAME)
+else
+	# Windows specific settings (original)
+	LDFLAGS = -L./glfw/lib-mingw-w64 -L./VulkanSDK/1.4.309.0/Lib -lglfw3 -lvulkan-1 -lgdi32 -luser32 -lkernel32
+	INCLUDE_DIRS = -I. -I../../Vulkan -I./glfw/include -I./VulkanSDK/1.4.309.0/Include
+	GLSLC = ./VulkanSDK/1.4.309.0/Bin/glslc.exe
+	CLEAN_CMD = del
+	TARGET = $(TARGET_NAME).exe
+endif
 
 # Source files
 SOURCES = main.cpp ULveWindow.cpp Ulve_pipeline.cpp ULve_device.cpp ULve_swap_chain.cpp ULve_model.cpp ULve_renderer.cpp simple_render_system.cpp first_app.cpp ../../Vulkan/VulkanCore.cpp
 
-# Output executable
-TARGET = TutorialApp.exe
 
 # Compiler
 CXX = g++
-
-# Shader compiler
-GLSLC = ./VulkanSDK/1.4.309.0/Bin/glslc.exe
 
 # Shader sources and targets
 SHADER_DIR = ../shaders
@@ -42,6 +60,6 @@ test: $(TARGET)
 	./$(TARGET)
 
 clean:
-	del $(TARGET)
-	del $(subst /,\,$(VERT_SPV))
-	del $(subst /,\,$(FRAG_SPV))
+	$(CLEAN_CMD) $(TARGET)
+	$(CLEAN_CMD) $(VERT_SPV)
+	$(CLEAN_CMD) $(FRAG_SPV)

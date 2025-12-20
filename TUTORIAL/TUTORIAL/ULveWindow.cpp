@@ -16,7 +16,9 @@ namespace lve {
 
 	void ULveWindow::initWindow()
 	{
-		glfwInit();
+		if (!glfwInit()) {
+			throw std::runtime_error("failed to initialize GLFW!");
+		}
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 		glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
@@ -27,9 +29,10 @@ namespace lve {
 
 	void ULveWindow::createWindowSurface(VkInstance instance, VkSurfaceKHR *surface)
 	{
-		if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS)
+		VkResult result = glfwCreateWindowSurface(instance, window, nullptr, surface);
+		if (result != VK_SUCCESS)
 		{
-			throw std::runtime_error("failed to create window surface!");
+			throw std::runtime_error("failed to create window surface! Error code: " + std::to_string(result));
 		}
 	}
 
