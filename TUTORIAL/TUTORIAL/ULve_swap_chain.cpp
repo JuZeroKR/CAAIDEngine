@@ -15,7 +15,7 @@ ULveSwapChain::ULveSwapChain(ULveDevice &deviceRef, VkExtent2D extent)
     : device{deviceRef}, windowExtent{extent} {
   init();
 }
-ULveSwapChain::ULveSwapChain(ULveDevice &deviceRef, VkExtent2D extent, std::unique_ptr<ULveSwapChain> previous)
+ULveSwapChain::ULveSwapChain(ULveDevice &deviceRef, VkExtent2D extent, std::shared_ptr<ULveSwapChain> previous)
     : device{deviceRef}, windowExtent{extent}, oldSwapChain{std::move(previous)} {
   init();
   oldSwapChain =nullptr;
@@ -298,6 +298,7 @@ void ULveSwapChain::createFramebuffers() {
 
 void ULveSwapChain::createDepthResources() {
   VkFormat depthFormat = findDepthFormat();
+  swapChainDepthFormat = depthFormat;
   VkExtent2D swapChainExtent = getSwapChainExtent();
 
   depthImages.resize(imageCount());

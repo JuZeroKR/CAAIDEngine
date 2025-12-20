@@ -5,7 +5,7 @@ LDFLAGS = -L./glfw/lib-mingw-w64 -L./VulkanSDK/1.4.309.0/Lib -lglfw3 -lvulkan-1 
 INCLUDE_DIRS = -I. -I../../Vulkan -I./glfw/include -I./VulkanSDK/1.4.309.0/Include
 
 # Source files
-SOURCES = main.cpp ULveWindow.cpp Ulve_pipeline.cpp ULve_device.cpp ULve_swap_chain.cpp ULve_model.cpp ULve_gameobject.cpp first_app.cpp ../../Vulkan/VulkanCore.cpp
+SOURCES = main.cpp ULveWindow.cpp Ulve_pipeline.cpp ULve_device.cpp ULve_swap_chain.cpp ULve_model.cpp ULve_renderer.cpp simple_render_system.cpp first_app.cpp ../../Vulkan/VulkanCore.cpp
 
 # Output executable
 TARGET = TutorialApp.exe

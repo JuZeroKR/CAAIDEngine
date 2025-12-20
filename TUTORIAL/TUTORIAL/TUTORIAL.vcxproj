@@ -117,23 +117,27 @@
       <AdditionalLibraryDirectories>$(MSBuildProjectDirectory)\VulkanSDK\1.4.309.0\Lib;$(MSBuildProjectDirectory)\glfw\lib-vc2022;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>vulkan-1.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="simple_render_system.cpp" />
     <ClCompile Include="ULveWindow.cpp" />
     <ClCompile Include="Ulve_pipeline.cpp" />
     <ClCompile Include="ULve_device.cpp" />
     <ClCompile Include="ULve_swap_chain.cpp" />
     <ClCompile Include="first_app.cpp" />
     <ClCompile Include="ULve_model.cpp" />
+    <ClCompile Include="ULve_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="simple_render_system.hpp" />
     <ClInclude Include="ULveWindow.h" />
     <ClInclude Include="ULve_pipeline.hpp" />
     <ClInclude Include="ULve_device.hpp" />
     <ClInclude Include="first_app.hpp" />
     <ClInclude Include="ULve_model.hpp" />
+    <ClInclude Include="ULve_renderer.hpp" />
+    <ClInclude Include="ULve_gameobject.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Vulkan\Vulkan.vcxproj">
