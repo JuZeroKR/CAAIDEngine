@@ -21,6 +21,7 @@ namespace lve{
             bool isFrameInProgress() const { return isFrameStarted; }
 
             VkRenderPass getSwapChainRenderPass() const { return lveSwapChain->getRenderPass(); }
+            float getAspectRatio() const { return lveSwapChain->extentAspectRatio(); }
             VkCommandBuffer getCurrentCommandBuffer() const { 
                 assert(isFrameStarted && "Cannot get command buffer when frame is not in progress");
                 return commandBuffers.at(currentFrameIndex); 

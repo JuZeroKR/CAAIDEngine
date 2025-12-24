@@ -122,6 +122,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="simple_render_system.cpp" />
     <ClCompile Include="ULveWindow.cpp" />
+    <ClCompile Include="ULve_camera.cpp" />
     <ClCompile Include="Ulve_pipeline.cpp" />
     <ClCompile Include="ULve_device.cpp" />
     <ClCompile Include="ULve_swap_chain.cpp" />
@@ -132,6 +133,7 @@
   <ItemGroup>
     <ClInclude Include="simple_render_system.hpp" />
     <ClInclude Include="ULveWindow.h" />
+    <ClInclude Include="ULve_camera.hpp" />
     <ClInclude Include="ULve_pipeline.hpp" />
     <ClInclude Include="ULve_device.hpp" />
     <ClInclude Include="first_app.hpp" />

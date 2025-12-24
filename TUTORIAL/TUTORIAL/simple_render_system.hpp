@@ -1,3 +1,6 @@
+#pragma once
+
+#include "Ulve_camera.hpp"
 #include "ULve_device.hpp"
 #include "ULve_pipeline.hpp"
 #include "ULve_gameobject.hpp"
@@ -14,7 +17,10 @@ namespace lve{
             SimpleRenderSystem(const SimpleRenderSystem&) = delete;
             SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
-            void renderGameObjects(VkCommandBuffer commandBuffer, std::vector<LveGameObject> &gameObjects);
+            void renderGameObjects(
+                VkCommandBuffer commandBuffer,
+                std::vector<LveGameObject> &gameObjects,
+                const ULveCamera&camera);
 
         private:
             void createPipelineLayout();
