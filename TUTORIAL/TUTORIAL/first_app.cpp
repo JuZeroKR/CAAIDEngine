@@ -25,6 +25,8 @@ namespace lve {
     void FirstApp::run() {
         SimpleRenderSystem simpleRenderSystem(lveDevice, lveRenderer.getSwapChainRenderPass());
         ULveCamera camera;
+        //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.1, 1.f));
+        camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
 
         while (!lveWindow.shouldClose()) {
             glfwPollEvents();
@@ -111,7 +113,7 @@ namespace lve {
         auto cube = LveGameObject::createGameObject();
         cube.model = model;
         cube.color = {.1f, .8f, .1f};
-        cube.transform.translation = {0.f, 0.f, 2.5f};
+        cube.transform.translation = { 0.f, 0.f, 2.5f };
         cube.transform.scale = {.5f, .5f, .5f};
         gameObjects.push_back(std::move(cube));
     }
