@@ -1,5 +1,6 @@
 #include "first_app.hpp"
 
+#include "keyboard_movement_controller.hpp"
 #include "ULve_camera.hpp"
 #include "simple_render_system.hpp"
 
@@ -9,10 +10,11 @@
 #include <glm/glm.hpp>
 
 #include <stdexcept>
+#include <chrono>
 #include <array>
 #include <glm/gtc/constants.hpp>
 
-
+#define MAX_FRAME_TIME 100.0f
 
 namespace lve {
     FirstApp::FirstApp() {
@@ -25,18 +27,28 @@ namespace lve {
     void FirstApp::run() {
         SimpleRenderSystem simpleRenderSystem(lveDevice, lveRenderer.getSwapChainRenderPass());
         ULveCamera camera;
-        //camera.setViewDirection(glm::vec3(0.f), glm::vec3(0.5f, 0.1, 1.f));
-        camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
+        
+        auto viewerObject = LveGameObject::createGameObject();
+        KeyboardMovementController cameraController{};
+        
+        auto currentTime = std::chrono::high_resolution_clock::now();
 
         while (!lveWindow.shouldClose()) {
             glfwPollEvents();
 
+            auto newTime = std::chrono::high_resolution_clock::now();
+            float frameTime = 
+                std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+            currentTime = newTime;
+
+            frameTime = glm::min(frameTime, MAX_FRAME_TIME);
+
+            cameraController.moveInPlaneXZ(lveWindow.getGLFWWindow(), frameTime, viewerObject);
+            camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
+
             float aspect = lveRenderer.getAspectRatio();
-            camera.setOrthographicProjection(-aspect, aspect, -1.f, 1.f, .1f, 10.f);
             camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
-            for (auto &obj : gameObjects) {
-                obj.transform.rotation = glm::mod(obj.transform.rotation + 0.0001f, glm::two_pi<float>());
-            }
+            
 
             if(auto commandBuffer = lveRenderer.beginFrame()) {
                 lveRenderer.beginSwapChainRenderPass(commandBuffer);

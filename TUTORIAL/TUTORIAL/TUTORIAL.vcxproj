@@ -119,6 +119,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="keyboard_movement_controller.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="simple_render_system.cpp" />
     <ClCompile Include="ULveWindow.cpp" />
@@ -131,6 +132,7 @@
     <ClCompile Include="ULve_renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="keyboard_movement_controller.hpp" />
     <ClInclude Include="simple_render_system.hpp" />
     <ClInclude Include="ULveWindow.h" />
     <ClInclude Include="ULve_camera.hpp" />
