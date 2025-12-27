@@ -142,6 +142,7 @@
     <ClInclude Include="ULve_model.hpp" />
     <ClInclude Include="ULve_renderer.hpp" />
     <ClInclude Include="ULve_gameobject.hpp" />
+    <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Vulkan\Vulkan.vcxproj">
