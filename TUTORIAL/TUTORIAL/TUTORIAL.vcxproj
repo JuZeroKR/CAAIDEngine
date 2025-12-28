@@ -124,6 +124,7 @@
     <ClCompile Include="simple_render_system.cpp" />
     <ClCompile Include="ULveWindow.cpp" />
     <ClCompile Include="ULve_camera.cpp" />
+    <ClCompile Include="ULve_gameobject.cpp" />
     <ClCompile Include="Ulve_pipeline.cpp" />
     <ClCompile Include="ULve_device.cpp" />
     <ClCompile Include="ULve_swap_chain.cpp" />
