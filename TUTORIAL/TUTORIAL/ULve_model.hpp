@@ -1,5 +1,6 @@
 #pragma once
 #include "ULve_device.hpp"
+#include "ULve_buffer.hpp"
 
 // libs
 #define GLM_FORCE_RADIANS
@@ -52,13 +53,12 @@ namespace lve {
         //std::unique_ptr<LveModel> createCubeModel(ULveDevice& device, glm::vec3 offset);
 
         ULveDevice& lveDevice;
-        VkBuffer vertexBuffer;
-        VkDeviceMemory vertexBufferMemory;
+        
+        std::unique_ptr<LveBuffer> vertexBuffer;
         uint32_t vertexCount;
 
         bool hasIndexBuffer = false;
-        VkBuffer indexBuffer;
-        VkDeviceMemory indexBufferMemory;
+        std::unique_ptr<LveBuffer> indexBuffer;
         uint32_t indexCount;
     };
 }

@@ -3,6 +3,7 @@
 #include "Ulve_camera.hpp"
 #include "ULve_device.hpp"
 #include "ULve_pipeline.hpp"
+#include "ULve_frame_info.hpp"
 #include "ULve_gameobject.hpp"
 
 #include <memory>
@@ -18,9 +19,8 @@ namespace lve{
             SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
             void renderGameObjects(
-                VkCommandBuffer commandBuffer,
-                std::vector<LveGameObject> &gameObjects,
-                const ULveCamera&camera);
+                FrameInfo &frameInfo,
+                std::vector<LveGameObject> &gameObjects);
 
         private:
             void createPipelineLayout();
