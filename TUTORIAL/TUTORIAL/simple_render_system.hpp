@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Ulve_camera.hpp"
+#include "ULve_camera.hpp"
 #include "ULve_device.hpp"
 #include "ULve_pipeline.hpp"
 #include "ULve_frame_info.hpp"
@@ -12,7 +12,7 @@
 namespace lve{
     class SimpleRenderSystem{
         public:
-            SimpleRenderSystem(ULveDevice &device, VkRenderPass renderPass);
+            SimpleRenderSystem(ULveDevice &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
             ~SimpleRenderSystem();
 
             SimpleRenderSystem(const SimpleRenderSystem&) = delete;
@@ -23,7 +23,7 @@ namespace lve{
                 std::vector<LveGameObject> &gameObjects);
 
         private:
-            void createPipelineLayout();
+            void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
             void createPipeline(VkRenderPass renderPass);
 
             ULveDevice &lveDevice;

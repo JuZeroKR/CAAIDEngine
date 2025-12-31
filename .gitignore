@@ -10,7 +10,7 @@ out/
 *.cache
 *.pdb
 *.ilk
-*.obj
+# *.obj
 *.tlog
 *.log
 *.idb
@@ -47,3 +47,4 @@ TutorialApp
 **/VulkanSDK/**/Bin/*d.exe
 **/VulkanSDK/**/Bin/*.json
 **/VulkanSDK/**/Bin/*.pdb
+!models/*.obj

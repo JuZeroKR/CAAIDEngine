@@ -3,6 +3,7 @@
 #include "ULve_swap_chain.hpp"
 #include "ULve_gameobject.hpp"
 #include "ULve_renderer.hpp"
+#include "ULve_descriptors.hpp"
 
 #include <memory>
 #include <vector>
@@ -29,5 +30,6 @@ namespace lve{
             ULveDevice lveDevice{ lveWindow };
             LveRenderer lveRenderer{ lveWindow, lveDevice };
             std::vector<LveGameObject> gameObjects;
+            std::unique_ptr<LveDescriptorPool> globalPool{};
     };
 }
