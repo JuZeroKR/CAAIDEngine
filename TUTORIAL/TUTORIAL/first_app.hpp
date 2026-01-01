@@ -29,7 +29,7 @@ namespace lve{
             ULveWindow lveWindow{ WIDTH, HEIGHT, "Hello Vulkan!" };
             ULveDevice lveDevice{ lveWindow };
             LveRenderer lveRenderer{ lveWindow, lveDevice };
-            std::vector<LveGameObject> gameObjects;
+            LveGameObject::Map gameObjects;
             std::unique_ptr<LveDescriptorPool> globalPool{};
     };
 }

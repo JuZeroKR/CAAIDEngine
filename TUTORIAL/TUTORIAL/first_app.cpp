@@ -21,7 +21,9 @@ namespace lve {
 
     struct GlobalUbo {
         glm::mat4 projectionView{ 1.f };
-        glm::vec3 lightDirection = glm::normalize(glm::vec3{1.f, -3.f, -1.f});
+        glm::vec4 ambientLightColor{1.f, 1.f,1.f, .02f};
+        glm::vec4 lightPosition{-1.f}; // w is ignored
+        glm::vec4 lightColor{1.f};
     };
 
     FirstApp::FirstApp() {
@@ -48,7 +50,7 @@ namespace lve {
         }
 
         auto globalSetLayout = LveDescriptorSetLayout::Builder(lveDevice)
-            .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT)
+            .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
             .build();
 
         std::vector<VkDescriptorSet> globalDescriptorSets(ULveSwapChain::MAX_FRAMES_IN_FLIGHT);
@@ -63,6 +65,7 @@ namespace lve {
         ULveCamera camera;
         
         auto viewerObject = LveGameObject::createGameObject();
+        viewerObject.transform.translation.z = -2.5f;
         KeyboardMovementController cameraController{};
         
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -91,7 +94,8 @@ namespace lve {
                     frameTime,
                     commandBuffer,
                     camera,
-                    globalDescriptorSets[frameIndex]
+                    globalDescriptorSets[frameIndex],
+                    gameObjects
                 };
 
                 // update
@@ -103,7 +107,7 @@ namespace lve {
 
                 // render
                 lveRenderer.beginSwapChainRenderPass(commandBuffer);
-                simpleRenderSystem.renderGameObjects(frameInfo, gameObjects);
+                simpleRenderSystem.renderGameObjects(frameInfo);
                 lveRenderer.endSwapChainRenderPass(commandBuffer);
                 lveRenderer.endFrame();
             }
@@ -116,16 +120,23 @@ namespace lve {
         std::shared_ptr<LveModel> model = LveModel::createModelFromFile(lveDevice, "../models/flat_vase.obj");
         auto flatVase = LveGameObject::createGameObject();
         flatVase.model = model;
-        flatVase.transform.translation = { -.5f, .5f, 2.5f };
+        flatVase.transform.translation = { -.5f, .5f, 0.0f };
         flatVase.transform.scale = {3.f, 1.5f, 3.f};
-        gameObjects.push_back(std::move(flatVase));
+        gameObjects.emplace(flatVase.getId(), std::move(flatVase));
 
         model = LveModel::createModelFromFile(lveDevice, "../models/smooth_vase.obj");
         auto smoothVase = LveGameObject::createGameObject();
         smoothVase.model = model;
-        smoothVase.transform.translation = { .5f, .5f, 2.5f };
+        smoothVase.transform.translation = { .5f, .5f, 0.0f };
         smoothVase.transform.scale = {3.f, 1.5f, 3.f};
-        gameObjects.push_back(std::move(smoothVase));
+        gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));
+
+        model = LveModel::createModelFromFile(lveDevice, "../models/quad.obj");
+        auto quad = LveGameObject::createGameObject();
+        quad.model = model;
+        quad.transform.translation = { 0.0f, .5f, 0.0f };
+        quad.transform.scale = {3.f, 1.f, 3.f};
+        gameObjects.emplace(quad.getId(), std::move(quad));
     }
 
     void FirstApp::sierpinski(

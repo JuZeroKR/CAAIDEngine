@@ -2,8 +2,9 @@
 setlocal
 
 :: Path to glslc.exe (relative to this script)
-set GLSLC=".\VulkanSDK\1.4.309.0\Bin\glslc.exe"
-set SHADER_DIR="..\shaders"
+set BASE_DIR=%~dp0
+set GLSLC="%BASE_DIR%VulkanSDK\1.4.309.0\Bin\glslc.exe"
+set SHADER_DIR="%BASE_DIR%..\shaders"
 
 if not exist %GLSLC% (
     echo Error: glslc.exe not found at %GLSLC%

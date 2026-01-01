@@ -19,8 +19,7 @@ namespace lve{
             SimpleRenderSystem& operator=(const SimpleRenderSystem&) = delete;
 
             void renderGameObjects(
-                FrameInfo &frameInfo,
-                std::vector<LveGameObject> &gameObjects);
+                FrameInfo &frameInfo);
 
         private:
             void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);

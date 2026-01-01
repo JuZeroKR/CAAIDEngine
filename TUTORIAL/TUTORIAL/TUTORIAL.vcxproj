@@ -125,6 +125,7 @@
     <ClCompile Include="ULveWindow.cpp" />
     <ClCompile Include="ULve_Buffer.cpp" />
     <ClCompile Include="ULve_camera.cpp" />
+    <ClCompile Include="ULve_descriptors.cpp" />
     <ClCompile Include="ULve_gameobject.cpp" />
     <ClCompile Include="Ulve_pipeline.cpp" />
     <ClCompile Include="ULve_device.cpp" />
@@ -135,10 +136,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="keyboard_movement_controller.hpp" />
+    <ClInclude Include="lve_utils.hpp" />
     <ClInclude Include="simple_render_system.hpp" />
     <ClInclude Include="ULveWindow.h" />
     <ClInclude Include="ULve_Buffer.hpp" />
     <ClInclude Include="ULve_camera.hpp" />
+    <ClInclude Include="ULve_descriptors.hpp" />
     <ClInclude Include="ULve_frame_info.hpp" />
     <ClInclude Include="ULve_pipeline.hpp" />
     <ClInclude Include="ULve_device.hpp" />
@@ -147,6 +150,7 @@
     <ClInclude Include="ULve_renderer.hpp" />
     <ClInclude Include="ULve_gameobject.hpp" />
     <ClInclude Include="tiny_obj_loader.h" />
+    <ClInclude Include="ULve_swap_chain.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Vulkan\Vulkan.vcxproj">
