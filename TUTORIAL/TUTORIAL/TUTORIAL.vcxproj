@@ -121,7 +121,8 @@
   <ItemGroup>
     <ClCompile Include="keyboard_movement_controller.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="simple_render_system.cpp" />
+    <ClCompile Include="systems\point_light_system.cpp" />
+    <ClCompile Include="systems\simple_render_system.cpp" />
     <ClCompile Include="ULveWindow.cpp" />
     <ClCompile Include="ULve_Buffer.cpp" />
     <ClCompile Include="ULve_camera.cpp" />
@@ -137,7 +138,8 @@
   <ItemGroup>
     <ClInclude Include="keyboard_movement_controller.hpp" />
     <ClInclude Include="lve_utils.hpp" />
-    <ClInclude Include="simple_render_system.hpp" />
+    <ClInclude Include="systems\point_light_system.hpp" />
+    <ClInclude Include="systems\simple_render_system.hpp" />
     <ClInclude Include="ULveWindow.h" />
     <ClInclude Include="ULve_Buffer.hpp" />
     <ClInclude Include="ULve_camera.hpp" />
