@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ULve_model.hpp"
+#include "ULve_texture.hpp"
 
 //libs
 #include <glm/gtc/matrix_transform.hpp>
@@ -8,6 +9,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <string>
 
 namespace lve {
     struct TransformComponent {
@@ -27,6 +29,10 @@ namespace lve {
         float lightIntensity = 1.0f;
     };
 
+    struct PlanetComponent {
+        float lightIntensity = 1.0f;
+    };
+
     class LveGameObject {
         public:
             using id_t = unsigned int;
@@ -37,10 +43,15 @@ namespace lve {
                 return LveGameObject(id++);
             }
 
+
+
             id_t getId() const { return id; }
 
             static LveGameObject makePointLight(
                 float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3{1.f});
+
+            static LveGameObject makePlanet(
+                ULveDevice& device, std::string strObjectName, float intensity = 10.f, float radius = 0.1f, glm::vec3 color = glm::vec3{1.f});
 
             LveGameObject(const LveGameObject&) = delete;
             LveGameObject& operator=(const LveGameObject&) = delete;
@@ -49,15 +60,18 @@ namespace lve {
             
             glm::vec3 color{};
             TransformComponent transform{};
+            std::shared_ptr<ULveTexture> texture{nullptr};
+            VkDescriptorSet textureDescriptor{VK_NULL_HANDLE};
+            std::string objectName = "";
 
             // Optional Pointer components
             std::shared_ptr<LveModel> model{};
             std::unique_ptr<PointLightComponent> pointLight = nullptr;
+            std::unique_ptr<PlanetComponent> planetInfo = nullptr;
 
         private:
         LveGameObject(id_t objId) : id(objId) {}
 
         id_t id;
-
     };
 }

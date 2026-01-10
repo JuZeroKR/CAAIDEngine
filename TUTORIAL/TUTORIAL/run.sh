@@ -8,5 +8,8 @@ export DYLD_LIBRARY_PATH=/opt/homebrew/lib:/opt/homebrew/opt/vulkan-loader/lib:/
 # Set path to MoltenVK ICD (Driver)
 export VK_ICD_FILENAMES=/opt/homebrew/etc/vulkan/icd.d/MoltenVK_icd.json
 
+# Disable Metal Argument Buffers (Compatibility Mode)
+export MVK_CONFIG_USE_METAL_ARGUMENT_BUFFERS=0
+
 # Run the application
 ./TutorialApp

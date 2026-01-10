@@ -26,6 +26,7 @@ namespace lve {
     struct FrameInfo {
         int frameIndex;
         float frameTime;
+        float globalTime;
         VkCommandBuffer commandBuffer;
         ULveCamera &camera;
         VkDescriptorSet globalDescriptorSet;

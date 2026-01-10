@@ -66,4 +66,28 @@ namespace lve {
         gameObj.transform.scale.x = radius;
         return gameObj;
     }
+
+    LveGameObject LveGameObject::makePlanet(ULveDevice& device, std::string strObjectName, float intensity, float radius, glm::vec3 color) {
+        LveGameObject gameObj = LveGameObject::createGameObject();
+        gameObj.planetInfo = std::make_unique<PlanetComponent>();
+        //gameObj.planetInfo->lightIntensity = intensity;
+        gameObj.objectName = strObjectName;
+        gameObj.color = color;
+        gameObj.transform.scale.x = radius;
+
+        // Load Texture
+        std::string textureName = strObjectName;
+        std::transform(textureName.begin(), textureName.end(), textureName.begin(),
+            [](unsigned char c){ return std::tolower(c); });
+        
+        std::string filename = "../textures/texture_" + textureName + ".jpg";
+        try {
+            gameObj.texture = std::make_shared<ULveTexture>(device, filename);
+        } catch (const std::exception& e) {
+            // If texture fails, just ignore for now (or log)
+             fprintf(stderr, "Failed to load texture for %s: %s\n", strObjectName.c_str(), e.what());
+        }
+
+        return gameObj;
+    }
 }

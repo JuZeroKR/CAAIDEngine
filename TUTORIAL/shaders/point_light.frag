@@ -22,10 +22,19 @@ layout(push_constant) uniform Push {
     float radius;
 } push;
 
+
+layout(set = 1, binding = 0) uniform sampler2D texSampler;
+
 void main() {
     float dis = sqrt(dot(fragOffset, fragOffset));
     if(dis >= 1.0) {
         discard;
     }
-    outColor = vec4(push.color.xyz, 1.0);
+    
+    vec2 uv = fragOffset * 0.5 + 0.5;
+    // Y축이 뒤집혀 있을 수 있으므로 확인 필요 (Vulkan은 Y가 아래로 증가)
+    // 텍스처 좌표계도 (0,0)이 좌상단.
+    
+    vec4 texColor = texture(texSampler, uv);
+    outColor = vec4(texColor.rgb, 1.0);
 }

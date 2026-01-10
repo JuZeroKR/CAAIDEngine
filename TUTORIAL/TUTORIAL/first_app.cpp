@@ -4,6 +4,7 @@
 #include "ULve_camera.hpp"
 #include "systems/simple_render_system.hpp"
 #include "systems/point_light_system.hpp"
+#include "systems/planet_render_system.hpp"
 
 // libs
 #define GLM_FORCE_RADIANS
@@ -25,8 +26,14 @@ namespace lve {
     FirstApp::FirstApp() {
         globalPool = LveDescriptorPool::Builder(lveDevice)
             .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, ULveSwapChain::MAX_FRAMES_IN_FLIGHT)
-            .setMaxSets(ULveSwapChain::MAX_FRAMES_IN_FLIGHT)
+            .addPoolSize(VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 10)
+            .setMaxSets(ULveSwapChain::MAX_FRAMES_IN_FLIGHT + 10)
             .build();
+        
+        textureSetLayout = LveDescriptorSetLayout::Builder(lveDevice)
+            .addBinding(0, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT)
+            .build();
+
         loadGameObjects();
     }
 
@@ -49,6 +56,8 @@ namespace lve {
             .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
             .build();
 
+
+            
         std::vector<VkDescriptorSet> globalDescriptorSets(ULveSwapChain::MAX_FRAMES_IN_FLIGHT);
         for (int i = 0; i < globalDescriptorSets.size(); i++) {
             auto bufferInfo = uboBuffers[i]->descriptorInfo();
@@ -66,6 +75,13 @@ namespace lve {
             lveDevice, 
             lveRenderer.getSwapChainRenderPass(), 
             globalSetLayout->getDescriptorSetLayout());
+
+        PlanetRenderSystem planetRenderSystem(
+            lveDevice,
+            lveRenderer.getSwapChainRenderPass(), 
+            globalSetLayout->getDescriptorSetLayout(),
+            textureSetLayout->getDescriptorSetLayout());
+
         ULveCamera camera;
         
         auto viewerObject = LveGameObject::createGameObject();
@@ -73,6 +89,7 @@ namespace lve {
         KeyboardMovementController cameraController{};
         
         auto currentTime = std::chrono::high_resolution_clock::now();
+        float globalTime = 0.f;
 
         while (!lveWindow.shouldClose()) {
             glfwPollEvents();
@@ -81,6 +98,7 @@ namespace lve {
             float frameTime = 
                 std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
             currentTime = newTime;
+            globalTime += frameTime;
 
             frameTime = glm::min(frameTime, MAX_FRAME_TIME);
 
@@ -96,6 +114,7 @@ namespace lve {
                 FrameInfo frameInfo{
                     frameIndex,
                     frameTime,
+                    globalTime,
                     commandBuffer,
                     camera,
                     globalDescriptorSets[frameIndex],
@@ -107,6 +126,7 @@ namespace lve {
                 ubo.projection = camera.getProjection();
                 ubo.view = camera.getView();
                 pointLightSystem.update(frameInfo, ubo);
+                planetRenderSystem.update(frameInfo, ubo);
                 uboBuffers[frameIndex]->writeToBuffer(&ubo);
                 uboBuffers[frameIndex]->flush();
 
@@ -115,6 +135,7 @@ namespace lve {
                 lveRenderer.beginSwapChainRenderPass(commandBuffer);
                 simpleRenderSystem.renderGameObjects(frameInfo);
                 pointLightSystem.render(frameInfo);
+                planetRenderSystem.render(frameInfo);
                 lveRenderer.endSwapChainRenderPass(commandBuffer);
                 lveRenderer.endFrame();
             }
@@ -124,19 +145,7 @@ namespace lve {
     }
 
     void FirstApp::loadGameObjects() {
-        std::shared_ptr<LveModel> model = LveModel::createModelFromFile(lveDevice, "../models/flat_vase.obj");
-        auto flatVase = LveGameObject::createGameObject();
-        flatVase.model = model;
-        flatVase.transform.translation = { -.5f, .5f, 0.0f };
-        flatVase.transform.scale = {3.f, 1.5f, 3.f};
-        gameObjects.emplace(flatVase.getId(), std::move(flatVase));
-
-        model = LveModel::createModelFromFile(lveDevice, "../models/smooth_vase.obj");
-        auto smoothVase = LveGameObject::createGameObject();
-        smoothVase.model = model;
-        smoothVase.transform.translation = { .5f, .5f, 0.0f };
-        smoothVase.transform.scale = {3.f, 1.5f, 3.f};
-        gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));
+        std::shared_ptr<LveModel> model;
 
         model = LveModel::createModelFromFile(lveDevice, "../models/quad.obj");
         auto quad = LveGameObject::createGameObject();
@@ -145,30 +154,68 @@ namespace lve {
         quad.transform.scale = {3.f, 1.f, 3.f};
         gameObjects.emplace(quad.getId(), std::move(quad));
 
-        auto pointLight = LveGameObject::makePointLight(0.2f);
-        gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+        // auto pointLight = LveGameObject::makePointLight(0.2f);
+        // gameObjects.emplace(pointLight.getId(), std::move(pointLight));
 
-        std::vector<glm::vec3> lightColors{
-            {1.f, .1f, .1f},
-            {.1f, .1f, 1.f},
-            {.1f, 1.f, .1f},
-            {1.f, 1.f, .1f},
-            {.1f, 1.f, 1.f},
-            {1.f, 1.f, 1.f}
-        };
+        // std::vector<glm::vec3> lightColors{
+        //     {1.f, .1f, .1f},
+        //     {.1f, .1f, 1.f},
+        //     {.1f, 1.f, .1f},
+        //     {1.f, 1.f, .1f},
+        //     {.1f, 1.f, 1.f},
+        //     {1.f, 1.f, 1.f}
+        // };
 
-        for(int i =0 ; i < lightColors.size(); i++)
-        {
-            auto pointLight = LveGameObject::makePointLight(0.2f);
-            pointLight.color = lightColors[i];
-            auto rotateLight = glm::rotate(
-                glm::mat4(1.f),
-                (i * glm::two_pi<float>()) / lightColors.size(),
-                {0.f, -1.f, 0.f}
-            );
-            pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
-            gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+        // for(int i =0 ; i < lightColors.size(); i++)
+        // {
+        //     auto pointLight = LveGameObject::makePointLight(0.2f);
+        //     pointLight.color = lightColors[i];
+        //     auto rotateLight = glm::rotate(
+        //         glm::mat4(1.f),
+        //         (i * glm::two_pi<float>()) / lightColors.size(),
+        //         {0.f, -1.f, 0.f}
+        //     );
+        //     pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
+        //     gameObjects.emplace(pointLight.getId(), std::move(pointLight));
+        // }
+
+        // 태양은 돌지 않는다.
+        auto pointSun = LveGameObject::makePlanet(lveDevice, "Sun", 5.0f);
+        pointSun.color = glm::vec3{1.f, 1.f, 0.0f};
+        pointSun.transform.translation = glm::vec3{0.f, 0.f, 0.f};
+        if (pointSun.texture) {
+            auto imageInfo = pointSun.texture->getImageInfo();
+            LveDescriptorWriter(*textureSetLayout, *globalPool)
+                .writeImage(0, &imageInfo)
+                .build(pointSun.textureDescriptor);
         }
+        gameObjects.emplace(pointSun.getId(), std::move(pointSun));
+
+        // 지구는 태양을 돈다.
+        auto pointEarth = LveGameObject::makePlanet(lveDevice, "Earth", 1.0f);
+        pointEarth.color = glm::vec3{0.f, 0.f, 1.f};
+        // 지구는 태양으로부터 어느정도 떨어진 위치에 위치.
+        pointEarth.transform.translation = glm::vec3(pointSun.transform.translation + glm::vec3(1.5f, 0.f, 0.f));
+        if (pointEarth.texture) {
+            auto imageInfo = pointEarth.texture->getImageInfo();
+            LveDescriptorWriter(*textureSetLayout, *globalPool)
+                .writeImage(0, &imageInfo)
+                .build(pointEarth.textureDescriptor);
+        }
+        gameObjects.emplace(pointEarth.getId(), std::move(pointEarth));
+
+        // 달은 지구를 돈다.
+        auto pointMoon = LveGameObject::makePlanet(lveDevice, "Moon", 1.0f);
+        pointMoon.color = glm::vec3{0.f, .5f, 0.f};
+        // 달는 지구으로부터 어느정도 떨어진 위치에 위치.
+        pointMoon.transform.translation = glm::vec3(pointEarth.transform.translation + glm::vec3(0.5f, 0.f, 0.f));
+        if (pointMoon.texture) {
+            auto imageInfo = pointMoon.texture->getImageInfo();
+            LveDescriptorWriter(*textureSetLayout, *globalPool)
+                .writeImage(0, &imageInfo)
+                .build(pointMoon.textureDescriptor);
+        }
+        gameObjects.emplace(pointMoon.getId(), std::move(pointMoon));
     }
 
     void FirstApp::sierpinski(
