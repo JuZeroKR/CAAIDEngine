@@ -28,7 +28,7 @@ else
 endif
 
 # Source files
-SOURCES = main.cpp ULveWindow.cpp Ulve_pipeline.cpp ULve_device.cpp ULve_swap_chain.cpp ULve_model.cpp ULve_renderer.cpp simple_render_system.cpp first_app.cpp ULve_camera.cpp keyboard_movement_controller.cpp ULve_descriptors.cpp ULve_Buffer.cpp ULve_gameobject.cpp ../../Vulkan/VulkanCore.cpp
+SOURCES = main.cpp ULveWindow.cpp Ulve_pipeline.cpp ULve_device.cpp ULve_swap_chain.cpp ULve_model.cpp ULve_renderer.cpp systems/simple_render_system.cpp systems/point_light_system.cpp first_app.cpp ULve_camera.cpp keyboard_movement_controller.cpp ULve_descriptors.cpp ULve_Buffer.cpp ULve_gameobject.cpp
 
 
 # Compiler
